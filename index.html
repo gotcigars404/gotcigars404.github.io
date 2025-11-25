@@ -1,8 +1,155 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-  <title>My Page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Got Cigars? Barcode Sheet</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+39&display=swap" rel="stylesheet">
+
+    <style>
+        /* General Layout */
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .product-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Card Styling (UPDATED SIZING) */
+        .product-card {
+            /* NEW SIZING */
+            min-width: 200px;
+            /* Minimum width of the card */
+            max-width: 300px;
+            /* Maximum width of the card */
+            flex: 1 1 200px;
+            /* Allows cards to grow/shrink between min/max */
+
+            /* Enforce minimum height to prevent size differences due to short names */
+            min-height: 100px;
+
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-left: 5px solid #007bff;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+
+        /* Product Name Styling (Two-Line Truncation) */
+        .product-name {
+            font-weight: bold;
+            font-size: 1em;
+            text-align: center;
+
+            /* 1. Define the Height for Two Lines */
+            /* This height must precisely accommodate two lines of text. */
+            height: 2.4em;
+            /* Adjust this value if your browser's default line-height is different */
+
+            /* 2. Enable Truncation and Ellipsis */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            /* This property technically only works for single-line overflow */
+
+            /* 3. The Multi-Line Truncation Hack (Works in most modern browsers: Chrome, Safari, Edge, etc.) */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            /* This is the property that enforces the 2-line limit */
+            -webkit-box-orient: vertical;
+        }
+
+        /* Barcode Styling (Libre Barcode 39) */
+        .barcode {
+            font-family: "Libre Barcode 39", system-ui;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 30px;
+            color: #000;
+            text-align: center;
+            margin-top: auto;
+            /* Pushes barcode to the bottom of the card */
+            word-break: break-all;
+        }
+
+        /* RESPONSIVENESS: Mobile Stacking */
+        @media (max-width: 450px) {
+            .product-card {
+                /* On small screens, force each card to take up the full width */
+                min-width: 100%;
+                max-width: 100%;
+                flex-basis: 100%;
+            }
+
+            .barcode {
+                font-size: 30px;
+            }
+        }
+    </style>
 </head>
+
 <body>
-  <h1>test page</h1>
+
+    <div class="product-list" id="product-container">
+    </div>
+
+    <script>
+        // 1. Data Source (Your product information)
+        const products = [
+            { name: "2012 barber pole toro", barcode: "644216077601" },
+            { name: "Gran Rob 7x54 Madro tray", barcode: "GC2025100624" },
+            { name: "Grand Habano Corojo #5", barcode: "810141020900" },
+            { name: "LFD Cabinet #5 Maduro", barcode: "7460644701221" },
+            { name: "LFD Cabinet #6 Maduro", barcode: "7460644701238" },
+            { name: "Padron 1964 #4 Maduro", barcode: "20373364677" },
+            { name: "Padron 1964 #40 Maduro", barcode: "11372679367" },
+            { name: "Padron 1964 Exclusivo Maduro", barcode: "24171973413" },
+            { name: "Padron Imperial Natural", barcode: "20065834549" },
+            { name: "Padron1964 exclusivo Maduro", barcode: "24174856690" },
+            { name: "Persian King Maduro", barcode: "GC2025090026" },
+            { name: "Persian Queen Gryphon 6x60", barcode: "GC2025100622" },
+            { name: "Persian Type Mod 6x60", barcode: "GC2025100623" }
+        ];
+
+        products.sort((a, b) => {
+            return a.name.localeCompare(b.name);
+        });
+
+        // 2. Rendering Function
+        function renderProductCards() {
+            const container = document.getElementById('product-container');
+
+            const html = products.map(product => {
+                // Libre Barcode 39 requires asterisks (*) for start/stop
+                const barcodeWithMarkers = `*${product.barcode}*`;
+
+                return `
+                <div class="product-card">
+                    <span class="product-name">${product.name}</span>
+                    <span class="barcode">${barcodeWithMarkers}</span>
+                </div>
+            `;
+            }).join('');
+
+            container.innerHTML = html;
+        }
+
+        // 3. Execute the function when the page loads
+        document.addEventListener('DOMContentLoaded', renderProductCards);
+    </script>
+
 </body>
+
 </html>
